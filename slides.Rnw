@@ -1,0 +1,159 @@
+\documentclass{beamer}
+
+\begin{document}
+
+\title{The Strange Case of Dr. Jekyll and Mr. Hyde in Wordclouds}
+\author{Elizabeth Bross}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
+\section{Install and Load Libraries}
+
+\begin{frame}[fragile]
+  \frametitle{Install and Load Libraries}
+    \begin{itemize}
+      \item<1->
+      <<warning=FALSE,message=FALSE>>=
+      library(dplyr)
+      @
+      \item<2->
+      <<warning=FALSE,message=FALSE>>=
+      library(gutenbergr)
+      @
+      \item<3->
+      <<warning=FALSE,message=FALSE>>=
+      library(tidytext)
+      @
+      \item<4->
+      <<warning=FALSE,message=FALSE>>=
+      library(ggplot2)
+      @
+      \item<5->
+      <<warning=FALSE,message=FALSE>>=
+      library(stringr)
+      @
+      \item<6->
+      <<warning=FALSE,message=FALSE>>=
+      library(wordcloud)
+      @
+      \item<7->
+      <<warning=FALSE,message=FALSE>>=
+      library(tm)
+      @
+    \end{itemize}
+\end{frame}
+
+\section{Access Project Gutenberg}
+\begin{frame}[fragile]
+  \frametitle{Access Project Gutenberg}
+  <<message=FALSE,warning=FALSE>>=
+  df<-gutenberg_works(str_detect(title,
+  'Strange Case of Dr. Jekyll and Mr. Hyde'))
+  
+  df$gutenberg_id
+  df$title
+  @
+\end{frame}
+
+\section{Download The Strange Case of Dr. Jekyll and Mr. Hyde}
+\begin{frame}[fragile]
+  \frametitle{Download The Strange Case of Dr. Jekyll and Mr. Hyde}
+  <<warning=FALSE,message=FALSE>>=
+  JandH<-gutenberg_download(42)
+  colnames(JandH)
+  substr(JandH$text[500],1,21)
+  @
+\end{frame}
+
+\section{Unpack the Words}
+\begin{frame}[fragile]
+  \frametitle{Unpack the Words}
+  <<>>=
+  JandH_words<-JandH%>%
+    unnest_tokens(word,text)
+  colnames(JandH_words)
+  JandH_words[498:500,]
+  @
+\end{frame}
+
+\section{The Bing Lexicon}
+\begin{frame}[fragile]
+  \frametitle{The Bing Lexicon}
+  <<>>=
+  bing<-get_sentiments('bing')
+  bing_neg<-bing%>%
+    filter(sentiment=='negative')
+  bing_pos<-bing%>%
+    filter(sentiment=='positive')
+  @
+\end{frame}
+
+\section{The Inner Join}
+\begin{frame}[fragile]
+  \frametitle{The Inner Join}
+  <<>>=
+  JandH_words_neg<-inner_join(JandH_words,bing_neg)
+  JandH_words_pos<-inner_join(JandH_words,bing_pos)
+  @
+\end{frame}
+
+\section{Prepare for the Wordclouds}
+\begin{frame}[fragile]
+  \frametitle{Prepare for the Wordclouds}
+  
+<<>>=
+  JandH_words_neg<-JandH_words_neg%>%
+  group_by(word)%>%
+  summarize(count=n())
+@
+
+<<>>=
+  JandH_words_pos<-JandH_words_pos%>%
+  group_by(word)%>%
+  summarize(count=n())
+@
+
+\end{frame}
+
+\section{Wordcloud Creation}
+\begin{frame}[fragile]
+  \frametitle{Wordcloud Creation}
+<<message=FALSE,eval=FALSE>>=
+wordcloud(JandH_words_neg$word,JandH_words_neg$count,
+          min.freq=3)
+@
+
+<<message=FALSE,eval=FALSE>>=
+wordcloud(JandH_words_pos$word,JandH_words_pos$count,
+          min.freq=2)
+@
+\end{frame}
+
+\section{Negative Word Results}
+\begin{frame}[fragile]
+  \frametitle{Negative Word Results}
+  \vspace*{-1cm}
+<<echo=FALSE,message=FALSE>>=
+wordcloud(JandH_words_neg$word,JandH_words_neg$count,min.freq=3)
+@
+
+\end{frame}
+
+\section{Positive Word Results}
+\begin{frame}[fragile]
+  \frametitle{Positive Word Results}
+  \vspace*{-1cm}
+<<echo=FALSE,message=FALSE>>=
+wordcloud(JandH_words_pos$word,JandH_words_pos$count,min.freq=2)
+@
+
+\end{frame}
+
+\end{document}

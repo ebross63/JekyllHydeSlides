@@ -1,0 +1,10 @@
+\beamer@sectionintoc {1}{Install and Load Libraries}{3}{0}{1}
+\beamer@sectionintoc {2}{Access Project Gutenberg}{10}{0}{2}
+\beamer@sectionintoc {3}{Download The Strange Case of Dr. Jekyll and Mr. Hyde}{11}{0}{3}
+\beamer@sectionintoc {4}{Unpack the Words}{12}{0}{4}
+\beamer@sectionintoc {5}{The Bing Lexicon}{13}{0}{5}
+\beamer@sectionintoc {6}{The Inner Join}{14}{0}{6}
+\beamer@sectionintoc {7}{Prepare for the Wordclouds}{15}{0}{7}
+\beamer@sectionintoc {8}{Wordcloud Creation}{16}{0}{8}
+\beamer@sectionintoc {9}{Negative Word Results}{17}{0}{9}
+\beamer@sectionintoc {10}{Positive Word Results}{18}{0}{10}
